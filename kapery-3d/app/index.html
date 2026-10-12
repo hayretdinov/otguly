@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <title>Каперы 3D</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="hud" class="hidden">
+    <div class="hud top-left">
+      <div class="brand">КАПЕРЫ 3D <span id="modeLabel">МОРЕ</span></div>
+      <div class="barline"><span>Корпус</span><div class="bar"><i id="hpBar"></i></div><b id="hpText">100/100</b></div>
+      <div class="barline"><span>Перезарядка</span><div class="bar"><i id="reloadBar"></i></div><b id="reloadText">Готово</b></div>
+      <div class="stats">
+        <span>Паруса <b id="sailsText">1/3</b></span>
+        <span>Скорость <b id="speedText">0</b></span>
+        <span>Экипаж <b id="crewText">18</b></span>
+      </div>
+    </div>
+
+    <div class="hud top-right">
+      <div>Уровень <b id="levelText">1</b> · XP <b id="xpText">0/100</b></div>
+      <div>Золото <b id="goldText">1200</b></div>
+      <div>Боеприпас <b id="ammoText">Ядра</b> · <span id="ammoCount">120</span></div>
+      <div class="wind">Ветер <span id="windArrow">➤</span></div>
+    </div>
+
+    <div class="hud target" id="targetBox">
+      <b id="targetName">Цель</b>
+      <span id="targetDist">—</span>
+      <span id="targetHp">—</span>
+    </div>
+
+    <canvas id="minimap" width="210" height="210"></canvas>
+
+    <div id="actionHint" class="action-hint hidden">E — действие</div>
+
+    <div class="hud controls" id="controlsBox">
+      <b>Управление</b>
+      <span>W/S — паруса / движение</span>
+      <span>A/D — поворот</span>
+      <span>Space — залп / удар</span>
+      <span>Q — пистолет на суше</span>
+      <span>E — порт / высадка / абордаж</span>
+      <span>1–4 — тип боеприпаса</span>
+      <span>C — персонаж · M — карта</span>
+    </div>
+  </div>
+
+  <div id="startScreen" class="screen">
+    <div class="hero-card">
+      <div class="eyebrow">ПЕРВЫЙ 3D-БИЛД</div>
+      <h1>КАПЕРЫ 3D</h1>
+      <p>Корабли, вода, острова, морские бои, порты, торговля, высадки и абордаж — уже в 3D.</p>
+      <div class="hero-choice">
+        <button id="femaleBtn" class="primary">Новая игра — капитан Изабель</button>
+        <button id="maleBtn">Новая игра — капитан Диего</button>
+        <button id="continueBtn" class="hidden">Продолжить</button>
+      </div>
+      <small>Сохранение происходит автоматически на этом ПК.</small>
+    </div>
+  </div>
+
+  <div id="modal" class="screen hidden">
+    <div class="modal-card">
+      <button id="modalClose" class="close-btn" aria-label="Закрыть">×</button>
+      <h2 id="modalTitle">Порт</h2>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="vendor/babylon.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
