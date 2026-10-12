@@ -29,6 +29,12 @@ jobs:
           cache: npm
           cache-dependency-path: kapery-3d/app/package.json
 
+      - name: JavaScript syntax check
+        shell: pwsh
+        run: |
+          node --check "kapery-3d/app/main.js"
+          node --check "kapery-3d/app/game.js"
+
       - name: Install dependencies
         working-directory: kapery-3d/app
         run: npm install
