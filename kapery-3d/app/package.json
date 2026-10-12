@@ -1,0 +1,16 @@
+{
+  "name": "kapery-3d",
+  "version": "0.1.0",
+  "description": "Kapery 3D - desktop Windows build",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "package:win": "electron-packager . \"Kapery 3D\" --platform=win32 --arch=x64 --out=dist --overwrite --asar"
+  },
+  "devDependencies": {
+    "@electron/packager": "^19.0.0",
+    "babylonjs": "^8.0.0",
+    "electron": "^38.0.0"
+  }
+}
