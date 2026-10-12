@@ -1,0 +1,71 @@
+name: Build Kapery 3D Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "kapery-3d/**"
+      - ".github/workflows/build-kapery-3d-windows.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kapery-3d-windows
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: kapery-3d/app/package.json
+
+      - name: Install dependencies
+        working-directory: kapery-3d/app
+        run: npm install
+
+      - name: Vendor Babylon.js
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "kapery-3d/app/vendor" | Out-Null
+          Copy-Item "kapery-3d/app/node_modules/babylonjs/babylon.js" "kapery-3d/app/vendor/babylon.js" -Force
+
+      - name: Package Windows x64
+        working-directory: kapery-3d/app
+        run: npx electron-packager . "Kapery 3D" --platform=win32 --arch=x64 --out=dist --overwrite --asar --prune=true
+
+      - name: Build ZIP
+        shell: pwsh
+        run: |
+          $src = "kapery-3d/app/dist/Kapery 3D-win32-x64/*"
+          $zip = "Kapery3D-Windows-x64.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path $src -DestinationPath $zip -CompressionLevel Optimal
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kapery3D-Windows-x64
+          path: Kapery3D-Windows-x64.zip
+          retention-days: 30
+
+      - name: Publish latest release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "kapery-3d-latest"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --title "Каперы 3D — Windows x64" --notes "Первый 3D-билд: море, корабли, персонажи, острова, порты, торговля, высадки, морской бой и абордаж."
+          }
+          gh release upload $tag "Kapery3D-Windows-x64.zip" --clobber
